@@ -10,7 +10,6 @@ public class MyNotificationListenerService extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         Log.d(TAG, "onNotificationPosted: " + sbn.getPackageName());
-        // Cod pentru primirea unei notificări
     }
 
     @Override

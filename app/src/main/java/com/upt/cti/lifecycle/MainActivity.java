@@ -42,9 +42,10 @@ public class MainActivity extends AppCompatActivity {
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
                     if (isGranted) {
+                        Log.d(TAG, "Notification permission granted");
                         createNotification();
                     } else {
-                        Log.d(TAG, "Permisiunea pentru notificări nu a fost acordată.");
+                        Log.d(TAG, "Notification permission not granted");
                     }
                 }
         );
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         notifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "Notify button clicked");
                 createNotification();
             }
         });
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "Call button clicked");
                 makeCall();
             }
         });
@@ -145,21 +148,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createNotification() {
+        Log.d(TAG, "Creating notification...");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                 == PackageManager.PERMISSION_GRANTED) {
             showNotification();
+            Log.d(TAG, "Notification created and displayed");
         } else {
+            Log.d(TAG, "Requesting notification permission");
             requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
         }
     }
 
     private void showNotification() {
-        // Create an intent that opens the Gmail app
+        Log.d(TAG, "Showing notification...");
         Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"recipient@example.com"}); // recipient email
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Subject Here"); // email subject
-        intent.putExtra(Intent.EXTRA_TEXT, "Body of the email"); // email body
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"mihai.photos6@gmail.com"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Subject Here");
+        intent.putExtra(Intent.EXTRA_TEXT, "Body of the email");
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
@@ -173,8 +179,8 @@ public class MainActivity extends AppCompatActivity {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(1, builder.build());
+        Log.d(TAG, "Notification displayed");
     }
-
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -185,21 +191,23 @@ public class MainActivity extends AppCompatActivity {
             channel.setDescription(description);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+            Log.d(TAG, "Notification channel created");
         }
     }
 
     private void makeCall() {
-        // Check if permission is granted
+        Log.d(TAG, "Making a call...");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
                 != PackageManager.PERMISSION_GRANTED) {
-            // Request permission if not granted
+            Log.d(TAG, "Requesting call phone permission");
             requestPermissionLauncher.launch(Manifest.permission.CALL_PHONE);
         } else {
-            // If permission is granted, make the call
-            String phoneNumber = "tel:+1 650 555-6789"; // Replace with the actual number
+            Log.d(TAG, "Permission granted, making the call");
+            String phoneNumber = "tel:+1 650 555-6789";
             Intent callIntent = new Intent(Intent.ACTION_CALL);
             callIntent.setData(Uri.parse(phoneNumber));
             startActivity(callIntent);
+            Log.d(TAG, "Call initiated");
         }
     }
 }
